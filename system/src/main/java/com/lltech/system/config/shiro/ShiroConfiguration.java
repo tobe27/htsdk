@@ -53,7 +53,7 @@ public class ShiroConfiguration {
     @Bean
     SessionStorageEvaluator sessionStorageEvaluator() { // 禁用session存储
         DefaultSessionStorageEvaluator sessionStorageEvaluator = new DefaultSessionStorageEvaluator();
-        sessionStorageEvaluator.setSessionStorageEnabled(false);
+        sessionStorageEvaluator.setSessionStorageEnabled(true);
         return sessionStorageEvaluator;
     }
 
@@ -76,12 +76,13 @@ public class ShiroConfiguration {
         new LifecycleBeanPostProcessor();
     }
 
-    @Bean
-    DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() { // 开启代理，用于注解，使用cglib方式为创建代理对象
-        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
-        return defaultAdvisorAutoProxyCreator;
-    }
+// 此处配置会导致Shiro进行多次授权，不要使用
+//    @Bean
+//    DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() { // 开启代理，用于注解，使用cglib方式为创建代理对象
+//        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+//        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+//        return defaultAdvisorAutoProxyCreator;
+//    }
 
     @Bean
     AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() { // 开启注解
