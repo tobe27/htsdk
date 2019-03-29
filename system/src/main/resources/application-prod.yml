@@ -5,12 +5,13 @@ server:
 #配置数据源
 spring:
   datasource:
-    druid:
       type: com.alibaba.druid.pool.DruidDataSource
+    druid:
       driverClassName: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
       username: root
       password: 123456
+
 
       # 初始化连接大小
       initial-size: 5
@@ -43,24 +44,3 @@ spring:
         url-pattern: /*
         exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
 
-  #配置 Jpa
-  jpa:
-    hibernate:
-      # 生产环境设置成 none，避免程序运行时自动更新数据库结构
-      ddl-auto: none
-
-#jwt
-jwt:
-  header: Authorization
-  secret: mySecret
-  # token 过期时间 2个小时
-  expiration: 7200000
-  auth:
-    # 授权路径
-    path: /login
-    # 获取用户信息
-    account: /info
-
-#是否允许生成代码，生产环境设置为false
-generator:
-  enabled: false
