@@ -1,7 +1,7 @@
 <configuration>
 
     <!--日志根目录-->
-    <springProperty scope="context" name="LOG_HOME" source="logging.path" defaultValue="/data/htsdk/logs"/>
+    <springProperty scope="context" name="LOG_HOME" source="logging.path" defaultValue="/data/htsdk/log"/>
 
     <!--日志级别-->
     <springProperty scope="context" name="LOG_ROOT_LEVEL" source="logging.level.root" defaultValue="INFO"/>
@@ -19,7 +19,7 @@
     <property name="LOG_DIR" value="${LOG_HOME}/%d{yyyyMMdd}" />
 
     <!--对日志进行格式化-->
-    <property name="LOG_MSG" value="[%level] | [%d{yyyyMMdd HH:mm:ss.SSS}] | [${HOSTNAME}] | [%thread] | [%logger{36}] ---> %msg%n "/>
+    <property name="LOG_MSG" value="%highlight([%level])|%red([%d{yyyy-MM-dd HH:mm:ss}])|%green([%thread])|%magenta([%logger{36}]) --> %msg%n "/>
 
     <!--文件大小，默认10MB-->
     <property name="MAX_FILE_SIZE" value="50MB" />

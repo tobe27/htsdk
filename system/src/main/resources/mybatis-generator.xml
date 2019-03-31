@@ -20,7 +20,7 @@
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
         <!--1.项目初始化时配置存放位置，生成Model类-->
-        <javaModelGenerator targetPackage="com.lltech.system.model" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.lltech.system" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
@@ -29,13 +29,13 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!--3.项目初始化时配置存放位置，生成Dao类-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lltech.system.dao" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lltech.system" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
         <!--###############只需要修改表名和类名即可###############################################-->
         <!--生成对应表及类名-->
-        <table tableName="log" domainObjectName="LogDO" enableCountByExample="false" enableUpdateByExample="false"
+        <table tableName="test_user" domainObjectName="TestUserDO" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
 
     </context>
