@@ -2,9 +2,9 @@ package com.lltech.system.logging.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author jie
@@ -69,9 +69,4 @@ public class LogDO {
      */
     @Column(name = "gmt_create", columnDefinition = "datetime")
     private LocalDateTime gmtCreate;
-
-    public LogDO(String logType, Long time) {
-        this.logType = logType;
-        this.time = time;
-    }
 }

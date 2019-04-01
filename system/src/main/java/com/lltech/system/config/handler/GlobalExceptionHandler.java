@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DuplicateKeyException.class)
     public ResultBean handleDuplicateKeyException(DuplicateKeyException e) {
-        log.error(e.getMessage(), e);
+        log.error("数据库中已存在该记录", e);
         return new ResultBean().error("数据库中已存在该记录");
     }
 
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResultBean handleBindingException(MethodArgumentNotValidException e) {
-        log.error(e.getMessage(), e);
+        log.error("参数格式不正确", e);
         BindingResult bindingResult = e.getBindingResult();
         StringBuilder sb = new StringBuilder();
         FieldError fieldError = bindingResult.getFieldError();
@@ -55,9 +55,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResultBean httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        log.error(e.getMessage(), e);
-        return new ResultBean().error("请求方式错误");
-    }
+        log.error("HTTP请求方式不支持", e);
+        return new ResultBean().error("HTTP请求方式不支持");
+}
 
     /**
      * 拦截未授权的请求
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = AuthorizationException.class)
     public ResultBean handleUnAuthUserException(AuthorizationException e) {
-        log.error(e.getMessage(), e);
+        log.error("用户没有访问权限", e);
         return new ResultBean().error(HttpStatus.UNAUTHORIZED, "该用户没有访问权限");
     }
 
@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = Exception.class)
     public ResultBean handleException(Exception e) {
-        log.error(e.getMessage(), e);
+        log.error("未知异常", e);
         return new ResultBean().error("未知异常，请联系客服");
     }
 

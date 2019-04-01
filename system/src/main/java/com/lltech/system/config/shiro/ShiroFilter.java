@@ -38,7 +38,7 @@ public class ShiroFilter extends AccessControlFilter {
     }
 
     /**
-     *返回false
+     * 返回false，才会执行下面的onAccessDenied方法
      * @param servletRequest req
      * @param servletResponse res
      * @param o object
@@ -54,7 +54,8 @@ public class ShiroFilter extends AccessControlFilter {
      * 从请求头获取token并验证，验证通过后交给realm进行登录
      * @param servletRequest req
      * @param servletResponse res
-     * @return 返回结果为true时，表明登录认证通过，执行controller层
+     * @return true- 登录认证通过，执行controller层
+     *         false- 登录认证失败，返回相应信息
      * @throws Exception e
      */
     @Override
@@ -70,9 +71,9 @@ public class ShiroFilter extends AccessControlFilter {
         }
 
         // token验证失败后，提醒重新登录
-        if (!JwtUtils.validateTokenIgnoreExp(token)) {
+        if (!JwtUtils.validateToken(token)) {
             servletResponse.setContentType("application/json;charset=UTF-8");
-            servletResponse.getWriter().print("{\"code\":300,\"message\":\"token校验失败，请重新登录！\"}");
+            servletResponse.getWriter().print("{\"code\":300,\"message\":\"token已失效，请重新登录！\"}");
             return false;
         }
 
@@ -85,12 +86,14 @@ public class ShiroFilter extends AccessControlFilter {
 
     /**
      * 获取请求的token
+     * @param httpRequest req
+     * @return token
      */
     private String getRequestToken(HttpServletRequest httpRequest){
-        //从header中获取token
+        // 从header中获取token
         String token = httpRequest.getHeader("token");
 
-        //如果header中不存在token，则从参数中获取token
+        // 如果header中不存在token，则从参数中获取token
         if(StringUtils.isBlank(token)){
             token = httpRequest.getParameter("token");
         }

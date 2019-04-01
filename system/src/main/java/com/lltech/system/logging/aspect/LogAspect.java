@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 /**
@@ -33,8 +32,12 @@ import java.util.Date;
 @Aspect
 @Component
 public class LogAspect {
+	private final LogRepository logRepository;
+
 	@Autowired
-	private LogRepository logRepository;
+	public LogAspect(LogRepository logRepository) {
+		this.logRepository = logRepository;
+	}
 
 	@Pointcut("@annotation(com.lltech.system.logging.annotation.Log)")
 	public void logPointCut() {
@@ -48,15 +51,18 @@ public class LogAspect {
 		Object result = point.proceed();
 		//执行时长(毫秒)
 		long time = System.currentTimeMillis() - beginTime;
-
-		//保存日志
+		// 保存日志
 		saveSysLog(point, time);
 
 		return result;
 	}
 
+	/**
+	 * 保存切面日志到数据库
+	 * @param joinPoint 切面
+	 * @param time 耗时
+	 */
 	private void saveSysLog(ProceedingJoinPoint joinPoint, long time) {
-		log.info("进入日志记录切面");
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
 
@@ -108,7 +114,5 @@ public class LogAspect {
 		// 保存系统日志
 		logRepository.save(logEntity);
 	}
-
-
 
 }
