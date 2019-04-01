@@ -1,4 +1,4 @@
-
+#=== 配置文件 ====
 spring:
   profiles:
     active: dev
@@ -9,6 +9,7 @@ spring:
       repositories:
         enabled: false
 
+#=== Redis配置 ====
   redis:
     #数据库索引
     database: 0
@@ -27,6 +28,13 @@ spring:
         min-idle: 8
     #连接超时时间
     timeout: 5000
+
+# === JPA配置 ====
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: true
 
 #=================Mybatis配置=========================
 # 别名配置

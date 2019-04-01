@@ -2,6 +2,7 @@ package com.lltech.system;
 
 import com.lltech.common.utils.JwtUtils;
 import com.lltech.common.utils.ResultBean;
+import com.lltech.system.logging.annotation.Log;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -21,19 +22,20 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/system")
 public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
+    @Log("用户登录")
     @PostMapping("/login")
     public ResultBean login() {
         Map<String, Object> payload = new HashMap<>();
         payload.put("username", "li");
-        String token = JwtUtils.generateToken(payload);
+        String token = JwtUtils.generateToken(payload, false, 0);
         log.info("username: li" + ",token: " + token);
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(token, token);
         subject.login(usernamePasswordToken);
-        return new ResultBean().ok();
+        return new ResultBean().ok().put("token", token);
     }
 }

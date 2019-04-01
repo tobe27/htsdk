@@ -11,9 +11,9 @@ import java.time.format.DateTimeFormatter;
  * 时间转换工具
  * @author Created by L.C.Y on 2018-11-6
  */
-public class DateConvertUtil {
+public class DateUtils {
 
-    private DateConvertUtil() {}
+    private DateUtils() {}
 
     /**
      * 毫秒时间戳

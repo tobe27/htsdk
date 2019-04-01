@@ -156,7 +156,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        return "0:0:0:0:0:0:0:1".equals(ip)?"127.0.0.1":ip;
+        return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
     }
 
     /**
@@ -258,9 +258,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         long birthday2Long;
         // 出生日期限定为19000101-现在
         long Long1900 = -2209017943000L;
-        long now2Long = DateConvertUtil.getMillisecond();
+        long now2Long = DateUtils.getMillisecond();
         try {
-            birthday2Long = DateConvertUtil.convertDate2Long(birthday, DatePatternEnum.DATE_TIME_SECOND);
+            birthday2Long = DateUtils.convertDate2Long(birthday, DatePatternEnum.DATE_TIME_SECOND);
         } catch (Exception e) {
             return false;
         }

@@ -35,6 +35,7 @@ public class ShiroRealm extends AuthorizingRealm {
         List<String> roles = new ArrayList<>();
         List<String> perms = new ArrayList<>();
         perms.add("hello_all");
+        perms.add("log_list");
         //  TODO 需把token中的用户权限写入perms以判断是否有权限
         authorizationInfo.addRoles(roles);
         authorizationInfo.addStringPermissions(perms);

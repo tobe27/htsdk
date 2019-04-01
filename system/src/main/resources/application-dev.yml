@@ -11,7 +11,6 @@ spring:
       username: root
       password: 123456
 
-
       # 初始化连接大小
       initial-size: 5
       # 最小空闲连接数
@@ -44,3 +43,8 @@ spring:
         exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
 
 
+  #配置 Jpa
+  jpa:
+    hibernate:
+      # 生产环境设置成 none，避免程序运行时自动更新数据库结构
+      ddl-auto: update

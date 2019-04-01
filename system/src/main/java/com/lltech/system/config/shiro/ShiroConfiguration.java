@@ -106,7 +106,7 @@ public class ShiroConfiguration {
         // 对顺序有要求，从上到下进行校验，需使用 LinkedHashMap
         Map<String, String> filterChainMap = new LinkedHashMap<>();
         filterChainMap.put("/", "anon");
-        filterChainMap.put("/login", "anon");
+        filterChainMap.put("/system/login", "anon");
         filterChainMap.put("/**", "shiroFilter");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainMap);
 
