@@ -5,9 +5,9 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 /**
  * @author Created by L.C.Y on 2018-11-26
  */
-public class MD5Util {
+public class Md5Util {
 
-    private MD5Util(){}
+    private Md5Util(){}
 
     /**
      * 生成MD5
