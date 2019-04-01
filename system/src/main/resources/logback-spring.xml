@@ -1,7 +1,7 @@
 <configuration>
 
     <!--日志根目录-->
-    <springProperty scope="context" name="LOG_HOME" source="logging.path" defaultValue="/data/htsdk/log"/>
+    <springProperty scope="context" name="LOG_HOME" source="logging.path" defaultValue="/data/htsdk/logs"/>
 
     <!--日志级别-->
     <springProperty scope="context" name="LOG_ROOT_LEVEL" source="logging.level.root" defaultValue="INFO"/>
