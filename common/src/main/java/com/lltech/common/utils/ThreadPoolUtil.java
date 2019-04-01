@@ -16,8 +16,7 @@ public class ThreadPoolUtil {
     @Bean
     public ExecutorService getThreadPool(){
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("thread-call-runner-%d").build();
-        int size = 2;
-        ExecutorService executorService = new ThreadPoolExecutor(size,size,0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>(),namedThreadFactory);
-        return executorService;
+        int size = 5;
+        return new ThreadPoolExecutor(size, size,0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), namedThreadFactory);
     }
 }

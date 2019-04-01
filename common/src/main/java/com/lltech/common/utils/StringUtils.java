@@ -30,8 +30,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     public static final String ALPHABET_NUMERIC = "^[a-zA-Z0-9_]*$";
     // 英文、数字、_+-.@等非特殊字符，用于密码
     public static final String ALPHABET_NUMERIC_SYMBOL = "^[a-zA-Z0-9_+-.@]*$";
-    // 数字,包括小数
+    // 整数或浮点数数字,包括小数
     public static final String  NUMERIC = "((^[1-9]+[0-9]*[.]?)|(^[0]+[.]))[0-9]*$";
+    // 纯数字
+    public static final String NUMBER = "^[0-9]*$";
 
     private StringUtils(){}
 
@@ -143,7 +145,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @param request
      * @return
      */
-        public static String getIP(HttpServletRequest request) {
+    public static String getIP(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
@@ -172,169 +174,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return weekDays[w];
     }
 
-
-    /**
-     * 判断是否为空
-     * 只有空格也判为空
-     * @param param 需要判断的参数
-     * @return boolean
-     */
-    public static boolean isBlank(Object param) {
-        return param == null || "".equals(param) || String.valueOf(param).trim().length() == 0;
-    }
-
-    /**
-     * 判断是否不为空
-     * @param param 需要判断的参数
-     * @return Boolean
-     */
-    public static boolean isNotBlank(Object param) {
-        return !isBlank(param);
-    }
-
-    /**
-     * 判断长度
-     * @param param 需要判断的参数
-     * @param minLen 最小长度
-     * @param maxLen 最大长度
-     * @return Boolean
-     */
-    public static boolean isLength(Object param, int minLen, int maxLen) {
-        return isNotBlank(param) && String.valueOf(param).length() >= minLen
-                && String.valueOf(param).length() <= maxLen;
-    }
-
-    /**
-     * 判断不是在长度内
-     * @param param 需要判断的参数
-     * @param minLen 最小长度
-     * @param maxLen 最大长度
-     * @return Boolean
-     */
-    public static boolean isNotLength(Object param, int minLen, int maxLen) {
-        return !isLength(param, minLen, maxLen);
-    }
-
-    /**
-     * 判断是否为固定长度
-     * @param param 需要判断的参数
-     * @param len 固定长度
-     * @return Boolean
-     */
-    public static boolean isLength(Object param, int len) {
-        return isLength(param, len, len);
-    }
-
-    /**
-     * 判断不为固定长度
-     * @param param 需要判断的参数
-     * @param len 固定长度
-     * @return Boolean
-     */
-    public static boolean isNotLength(Object param, int len) {
-        return !isLength(param, len, len);
-    }
-
-    /**
-     * 判断是否为限长的数字
-     * @param param 数字
-     * @param maxLen 最长,默认最短为1
-     * @return Boolean
-     */
-    public static boolean isNumeric(Object param, int maxLen) {
-        return isNotBlank(param) && String.valueOf(param).matches(NUMERIC)
-                && isLength(param, 1, maxLen);
-    }
-
-    /**
-     * 判断不为限长的数字
-     * @param param 数字
-     * @param maxLen 最长,默认最短为1
-     * @return Boolean
-     */
-    public static boolean isNotNumeric(Object param, int maxLen) {
-        return !isNumeric(param, maxLen);
-    }
-
-    /**
-     * 判断是否为11位手机号码
-     * @param param 手机号码
-     * @return Boolean
-     */
-    public static boolean isPhoneNumber(Object param) {
-        return isNotBlank(param) && String.valueOf(param).matches(PHONE_NUMBER) && isLength(param, 11);
-    }
-
-    /**
-     * 判断是否为11位手机号码
-     * @param param 手机号码
-     * @return Boolean
-     */
-    public static boolean isNotPhoneNumber(Object param) {
-        return !isPhoneNumber(param);
-    }
-
-    /**
-     * 判断是否为邮箱
-     * @param param 邮箱
-     * @param maxLen 最大长度限制
-     * @return Boolean
-     */
-    public static boolean isEmail(Object param, int maxLen) {
-        return isNotBlank(param) && String.valueOf(param).matches(EMAIL) && isLength(param, 5, maxLen);
-    }
-
-    /**
-     * 判断是否为邮箱
-     * @param param 邮箱
-     * @param maxLen 最大长度限制
-     * @return Boolean
-     */
-    public static boolean isNotEmail(Object param, int maxLen) {
-        return !isEmail(param, maxLen);
-    }
-
-    /**
-     * 判断是否为用户名
-     * @param param 用户名
-     * @param maxLen 最大长度
-     * @return Boolean
-     */
-    public static boolean isUsername(Object param, int maxLen) {
-        return isNotBlank(param) && String.valueOf(param).matches(ALPHABET_NUMERIC) && isLength(param, 1, maxLen);
-    }
-
-    /**
-     * 判断是否为用户名，最短1位
-     * @param param 用户名
-     * @param maxLen 最大长度
-     * @return Boolean
-     */
-    public static boolean isNotUsername(Object param, int maxLen) {
-        return !isUsername(param, maxLen);
-    }
-
-    /**
-     * 判断是否为密码，最短6位
-     * 包括英文数字下划线以及+-.@
-     * @param param 密码
-     * @param maxLen 最大长度
-     * @return boolean
-     */
-    public static boolean isPassword(Object param, int maxLen) {
-        return isNotBlank(param) && String.valueOf(param).matches(ALPHABET_NUMERIC_SYMBOL) && isLength(param, 6, maxLen);
-    }
-
-    /**
-     * 判断是否为密码，最短6位
-     * 包括英文数字下划线以及+-.@
-     * @param param 密码
-     * @param maxLen 最大长度
-     * @return boolean
-     */
-    public static boolean isNotPassword(Object param, int maxLen) {
-        return !isPassword(param, maxLen);
-    }
 
     /**
      * 校验是否为身份证
@@ -396,13 +235,15 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         Collections.addAll(cityList, cityCode);
 
         // 为空或者长度不符
-        if (isNotLength(param, 18)) {
+        boolean isNot18Length = isBlank(param) || param.length() != 18;
+        if (isNot18Length) {
             return false;
         }
 
         // 前17位为数字
         String front17 = param.substring(0, 17);
-        if (isNotNumeric(front17, 17)) {
+        boolean isNot17Number = !front17.matches(NUMBER);
+        if (isNot17Number) {
             return false;
         }
 
@@ -419,7 +260,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         long Long1900 = -2209017943000L;
         long now2Long = DateConvertUtil.getMillisecond();
         try {
-            birthday2Long = DateConvertUtil.convertDate2Long(birthday, DatePatternEnum.DATE_TIME_SECOND_);
+            birthday2Long = DateConvertUtil.convertDate2Long(birthday, DatePatternEnum.DATE_TIME_SECOND);
         } catch (Exception e) {
             return false;
         }

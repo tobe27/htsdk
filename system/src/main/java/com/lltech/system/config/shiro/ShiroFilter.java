@@ -1,6 +1,7 @@
 package com.lltech.system.config.shiro;
 
 import com.lltech.common.utils.JwtUtils;
+import com.lltech.common.utils.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -59,7 +60,7 @@ public class ShiroFilter extends AccessControlFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        String token = request.getHeader("token");
+        String token = getRequestToken(request);
 
         // token不存在时表示未登录，需重新登录
         if (token == null) {
@@ -79,6 +80,22 @@ public class ShiroFilter extends AccessControlFilter {
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(token, token);
         subject.login(usernamePasswordToken);
         return true;
+    }
+
+
+    /**
+     * 获取请求的token
+     */
+    private String getRequestToken(HttpServletRequest httpRequest){
+        //从header中获取token
+        String token = httpRequest.getHeader("token");
+
+        //如果header中不存在token，则从参数中获取token
+        if(StringUtils.isBlank(token)){
+            token = httpRequest.getParameter("token");
+        }
+
+        return token;
     }
 
 }
