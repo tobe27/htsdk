@@ -35,7 +35,7 @@
 
         <!--###############只需要修改表名和类名即可###############################################-->
         <!--生成对应表及类名-->
-        <table tableName="test_user" domainObjectName="TestUserDO" enableCountByExample="false" enableUpdateByExample="false"
+        <table tableName="sys_log" domainObjectName="SysLogDO" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
 
     </context>
