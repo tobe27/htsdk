@@ -1,5 +1,6 @@
 package com.lltech.system.modules.system.service;
 
+import com.lltech.system.modules.system.model.MenuTreeEntity;
 import com.lltech.system.modules.system.model.SysMenuDO;
 
 import java.util.List;
@@ -21,4 +22,11 @@ public interface SysMenuDOService {
     Set<SysMenuDO> listMenu(SysMenuDO record);
 
     int updateByPrimaryKeySelective(SysMenuDO record);
+
+    /**
+     * 遍历出菜单，并按照结构整理
+     * @param menus 菜单
+     * @return 树形菜单结构
+     */
+    List<MenuTreeEntity> convertMenuToTree(Set<SysMenuDO> menus);
 }

@@ -39,6 +39,15 @@
     where ur.user_id = #{userId}
   </select>
 
+  <!--查询用户所有的菜单-->
+  <select id="listStringMenuByUserId" parameterType="java.lang.Long" resultType="String">
+    select menu.parent_menu
+    from sys_menu menu
+    join sys_menu_role mr on menu.menu_id = mr.menu_id
+    join sys_user_role ur on mr.role_id = ur.role_id
+    where ur.user_id = #{userId}
+  </select>
+
   <!--列表,可根据用户名和状态查询-->
   <select id="listSysUser" parameterType="com.lltech.system.modules.system.model.SysUserDO" resultMap="BaseResultMap">
     select user_id, username, status, gmt_create

@@ -3,8 +3,10 @@ package com.lltech.system.modules.system.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.lltech.common.exception.BadRequestException;
 import com.lltech.common.utils.Md5Util;
+import com.lltech.system.modules.system.dao.SysMenuDOMapper;
 import com.lltech.system.modules.system.dao.SysRoleDOMapper;
 import com.lltech.system.modules.system.dao.SysUserDOMapper;
+import com.lltech.system.modules.system.model.SysMenuDO;
 import com.lltech.system.modules.system.model.SysRoleDO;
 import com.lltech.system.modules.system.model.SysUserDO;
 import com.lltech.system.modules.system.service.SysUserDOService;
@@ -24,13 +26,14 @@ import java.util.Set;
 @Service
 public class SysUserDOServiceImpl implements SysUserDOService {
     private final SysUserDOMapper sysUserDOMapper;
-
     private final SysRoleDOMapper sysRoleDOMapper;
+    private final SysMenuDOMapper sysMenuDOMapper;
 
     @Autowired
-    public SysUserDOServiceImpl(SysUserDOMapper sysUserDOMapper, SysRoleDOMapper sysRoleDOMapper) {
+    public SysUserDOServiceImpl(SysUserDOMapper sysUserDOMapper, SysRoleDOMapper sysRoleDOMapper, SysMenuDOMapper sysMenuDOMapper) {
         this.sysUserDOMapper = sysUserDOMapper;
         this.sysRoleDOMapper = sysRoleDOMapper;
+        this.sysMenuDOMapper = sysMenuDOMapper;
     }
 
     /**
@@ -130,6 +133,28 @@ public class SysUserDOServiceImpl implements SysUserDOService {
     @Override
     public Set<String> listStringPermsByUserId(Long userId) {
         return sysUserDOMapper.listStringPermsByUserId(userId);
+    }
+
+    /**
+     * 查询用户所有的菜单
+     *
+     * @param userId userId
+     * @return menus
+     */
+    @Override
+    public Set<String> listStringMenuByUserId(Long userId) {
+        return sysUserDOMapper.listStringMenuByUserId(userId);
+    }
+
+    /**
+     * 查询用户的菜单和权限
+     *
+     * @param userId userId
+     * @return 菜单列表
+     */
+    @Override
+    public Set<SysMenuDO> listMenuByUserId(Long userId) {
+        return sysMenuDOMapper.listMenuByUserId(userId);
     }
 
     /**

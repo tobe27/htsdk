@@ -15,7 +15,7 @@
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from sys_menu
     where menu_id = #{menuId,jdbcType=INTEGER}
@@ -46,6 +46,15 @@
     from sys_menu menu
     join sys_menu_role rm on menu.menu_id = rm.menu_id
     where rm.role_id = #{roleId}
+  </select>
+
+  <!--查询用户所有的菜单-->
+  <select id="listMenuByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select menu.menu_id, menu.menu_name, menu.parent_menu, menu.perms
+    from sys_menu menu
+    join sys_menu_role mr on menu.menu_id = mr.menu_id
+    join sys_user_role ur on mr.role_id = ur.role_id
+    where ur.user_id = #{userId}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

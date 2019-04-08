@@ -67,6 +67,13 @@ public interface SysUserDOMapper {
     Set<String> listStringPermsByUserId(Long userId);
 
     /**
+     * 查询用户所有的菜单
+     * @param userId userId
+     * @return menus
+     */
+    Set<String> listStringMenuByUserId(Long userId);
+
+    /**
      * 列表,可根据用户名和状态查询
      * @param record username or status
      * @return 用户列表

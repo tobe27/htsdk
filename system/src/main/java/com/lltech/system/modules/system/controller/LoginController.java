@@ -6,7 +6,10 @@ import com.lltech.common.utils.ResultBean;
 import com.lltech.common.utils.StringUtils;
 import com.lltech.system.logging.annotation.Log;
 import com.lltech.system.modules.system.dto.LoginUserDTO;
+import com.lltech.system.modules.system.model.MenuTreeEntity;
+import com.lltech.system.modules.system.model.SysMenuDO;
 import com.lltech.system.modules.system.model.SysUserDO;
+import com.lltech.system.modules.system.service.SysMenuDOService;
 import com.lltech.system.modules.system.service.SysUserDOService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
@@ -17,8 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -28,11 +30,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/system")
 public class LoginController {
+    private static final int SUPER_ADMIN = 1;
     private final SysUserDOService sysUserDOService;
+    private final SysMenuDOService sysMenuDOService;
 
     @Autowired
-    public LoginController(SysUserDOService sysUserDOService) {
+    public LoginController(SysUserDOService sysUserDOService, SysMenuDOService sysMenuDOService) {
         this.sysUserDOService = sysUserDOService;
+        this.sysMenuDOService = sysMenuDOService;
     }
 
     @Log("用户登录")
@@ -76,6 +81,41 @@ public class LoginController {
         String token = JwtUtils.generateTokenOffExp(payload);
         log.info("{username=" + user.getUsername() + ", token=" + token + "}");
 
-        return new ResultBean().ok(user.setPassword(null)).put("token", token);
+        // 用户的角色
+        Set<Integer> roleIdList = sysUserDOService.listRoleIdByUserId(user.getUserId());
+
+        List<MenuTreeEntity> menuTree;
+        Set<String> perms = new HashSet<>();;
+
+        // 超级管理员有所有权限
+        if (roleIdList.contains(SUPER_ADMIN)) {
+            Set<SysMenuDO> menus = sysMenuDOService.listMenu(new SysMenuDO());
+            // 树形菜单
+            // 获取用户菜单与权限
+            menuTree = sysMenuDOService.convertMenuToTree(menus);
+
+            // 权限
+            for (SysMenuDO menu : menus) {
+                perms.add(menu.getMenuName());
+            }
+
+        }
+        // 非超级管理员只有相应的权限
+        else {
+            // 树形菜单
+            // 获取用户菜单与权限
+            Set<SysMenuDO> menus = sysUserDOService.listMenuByUserId(user.getUserId());
+            menuTree = sysMenuDOService.convertMenuToTree(menus);
+
+            // 权限
+            for (SysMenuDO menu : menus) {
+                perms.add(menu.getMenuName());
+            }
+        }
+
+        return new ResultBean().ok(user.setPassword(null))
+                .put("token", token)
+                .put("perms", perms)
+                .put("menus", menuTree);
     }
 }

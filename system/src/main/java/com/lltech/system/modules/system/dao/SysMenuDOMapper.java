@@ -38,6 +38,13 @@ public interface SysMenuDOMapper {
      */
     Set<SysMenuDO> listMenuByRoleId(Integer roleId);
 
+    /**
+     * 查询用户的菜单和权限
+     * @param userId userId
+     * @return 菜单列表
+     */
+    Set<SysMenuDO> listMenuByUserId(Long userId);
+
     int updateByPrimaryKeySelective(SysMenuDO record);
 
 }

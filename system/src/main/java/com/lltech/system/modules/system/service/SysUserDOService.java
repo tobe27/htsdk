@@ -1,5 +1,6 @@
 package com.lltech.system.modules.system.service;
 
+import com.lltech.system.modules.system.model.SysMenuDO;
 import com.lltech.system.modules.system.model.SysUserDO;
 
 import java.util.List;
@@ -50,6 +51,20 @@ public interface SysUserDOService {
      * @return perms
      */
     Set<String> listStringPermsByUserId(Long userId);
+
+    /**
+     * 查询用户所有的菜单
+     * @param userId userId
+     * @return menus
+     */
+    Set<String> listStringMenuByUserId(Long userId);
+
+    /**
+     * 查询用户的菜单和权限
+     * @param userId userId
+     * @return 菜单列表
+     */
+    Set<SysMenuDO> listMenuByUserId(Long userId);
 
     /**
      * 列表,可根据用户名和状态查询
