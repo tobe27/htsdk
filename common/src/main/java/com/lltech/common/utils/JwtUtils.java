@@ -46,7 +46,7 @@ public class JwtUtils {
      * @param exp 有效期ms
      * @return token
      */
-    public static String generateToken(Map<String, Object> payload , boolean onExp, long exp) {
+    private static String generateToken(Map<String, Object> payload , boolean onExp, long exp) {
         // 加密算法
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         //  管理密钥

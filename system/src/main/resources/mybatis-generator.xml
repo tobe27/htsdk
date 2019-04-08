@@ -12,7 +12,7 @@
         </commentGenerator>
         <!--项目初始化时配置-数据库-->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/eladmin?characterEncoding=utf-8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
+                        connectionURL="jdbc:mysql://localhost:3306/db?characterEncoding=utf-8&amp;serverTimezone=GMT%2B8&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
                         userId="root"
                         password="123456"/>
 
@@ -20,7 +20,7 @@
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
         <!--1.项目初始化时配置存放位置，生成Model类-->
-        <javaModelGenerator targetPackage="com.lltech.system" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.lltech.system.modules" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
@@ -29,14 +29,19 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!--3.项目初始化时配置存放位置，生成Dao类-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lltech.system" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lltech.system.modules" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
         <!--###############只需要修改表名和类名即可###############################################-->
         <!--生成对应表及类名-->
-        <table tableName="sys_log" domainObjectName="SysLogDO" enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
+        <table tableName="sys_log" domainObjectName="SysLogDO"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false" enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
+               enableInsert="true">
+        </table>
 
     </context>
 </generatorConfiguration>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lltech.system.modules.system.dao.SysUserDOMapper">
+  <resultMap id="BaseResultMap" type="com.lltech.system.modules.system.model.SysUserDO">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select user_id, username, status, gmt_create
+    from sys_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+
+  <!--根据用户名查询密码-->
+  <select id="getUserByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select user_id, username, password, status, gmt_create
+    from sys_user
+    where username = #{username}
+  </select>
+
+  <!--查询用户所有的角色Id-->
+  <select id="listRoleIdByUserId" parameterType="java.lang.Long" resultType="Integer">
+    select role_id
+    from sys_user_role
+    where user_id = #{userId}
+  </select>
+
+  <!--查询用户所有的权限-->
+  <select id="listStringPermsByUserId" parameterType="java.lang.Long" resultType="String">
+    select menu.perms
+    from sys_menu menu
+    join sys_menu_role mr on menu.menu_id = mr.menu_id
+    join sys_user_role ur on mr.role_id = ur.role_id
+    where ur.user_id = #{userId}
+  </select>
+
+  <!--列表,可根据用户名和状态查询-->
+  <select id="listSysUser" parameterType="com.lltech.system.modules.system.model.SysUserDO" resultMap="BaseResultMap">
+    select user_id, username, status, gmt_create
+    from sys_user
+    where 1=1
+    <if test="username != null">
+        and username LIKE CONCAT('%', #{username}, '%')
+    </if>
+    <if test="status != null">
+        and status = #{status}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+
+  <!--删除用户角色关联表-->
+  <delete id="deleteUserRoleByUserId" parameterType="java.lang.Long">
+    delete from sys_user_role
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+
+  <!--插入用户角色关联表-->
+  <insert id="insertUserRole" parameterType="com.lltech.system.modules.system.model.SysUserDO">
+    insert into sys_user_role(user_id, role_id) values (#{userId}, #{roleId})
+  </insert>
+
+  <insert id="insertSelective" keyProperty="userId"  useGeneratedKeys="true" parameterType="com.lltech.system.modules.system.model.SysUserDO">
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.lltech.system.modules.system.model.SysUserDO">
+    update sys_user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+
+</mapper>

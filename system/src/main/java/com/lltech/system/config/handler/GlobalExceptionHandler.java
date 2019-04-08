@@ -1,5 +1,6 @@
 package com.lltech.system.config.handler;
 
+import com.lltech.common.exception.BadRequestException;
 import com.lltech.common.utils.ResultBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
@@ -57,7 +58,7 @@ public class GlobalExceptionHandler {
     public ResultBean httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("HTTP请求方式不支持", e);
         return new ResultBean().error("HTTP请求方式不支持");
-}
+    }
 
     /**
      * 拦截未授权的请求
@@ -71,16 +72,25 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 拦截ServiceException后返回ResultBean
+     * 自定义请求异常类
+     * @param e BadRequestException 错误请求异常
+     * @return ResultBean Code - 400
+     */
+    @ExceptionHandler(BadRequestException.class)
+    public ResultBean handleBadRequestException(BadRequestException e) {
+        log.error(e.getMessage(), e);
+        return new ResultBean().error(e.getMessage());
+    }
+
+    /**
+     * 拦截Exception后返回ResultBean
      * @param e Exception异常
      * @return ResultBean Code - 400
      */
     @ExceptionHandler(value = Exception.class)
     public ResultBean handleException(Exception e) {
         log.error("未知异常", e);
-        return new ResultBean().error("未知异常，请联系客服");
+        return new ResultBean().error("未知异常，请联系客服: " + e.getMessage());
     }
-
-
 
 }

@@ -28,7 +28,7 @@ public class LogQueryController {
 
     @Log("查看日志记录")
     @GetMapping("/log/list")
-    @RequiresPermissions("log_list")
+    @RequiresPermissions("sys_log_list")
     public ResultBean queryLogList(Integer pageNum, Integer pageSize) {
         Page<LogDO> page = logRepository.findAll(PageRequest.of(pageNum -1, pageSize, Sort.Direction.DESC, "id"));
         return new ResultBean().ok(page.getTotalElements(), page.getContent());

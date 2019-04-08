@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lltech.system.modules.system.dao.SysRoleDOMapper">
+  <resultMap id="BaseResultMap" type="com.lltech.system.modules.system.model.SysRoleDO">
+    <id column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select role_id, role_name, remark, gmt_create
+    from sys_role
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
+
+  <!--根据角色名查询-->
+  <select id="getRoleByRoleName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select role_id, role_name, remark, gmt_create
+    from sys_role
+    where role_name = #{roleName}
+  </select>
+
+  <!--角色列表，可根据roleName查询-->
+  <select id="listSysRole" parameterType="com.lltech.system.modules.system.model.SysRoleDO" resultMap="BaseResultMap">
+    select role_id, role_name, remark, gmt_create
+    from sys_role
+    where 1=1
+    <if test="roleName != null">
+        and role_name LIKE CONCAT('%', #{roleName}, '%')
+    </if>
+  </select>
+
+  <!--用户关联角色列表，根据用户Id查询-->
+  <select id="listSysRoleByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select role.role_id, role.role_name, role.remark, role.gmt_create
+    from sys_role role
+    join sys_user_role ur on role.role_id = ur.role_id
+    where ur.user_id = #{userId}
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_role
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+
+  <!--删除关联菜单-->
+  <delete id="deleteRoleMenuByRoleId" parameterType="java.lang.Integer">
+    delete from sys_menu_role
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+
+  <!--删除关联用户-->
+  <delete id="deleteRoleUserByRoleId" parameterType="java.lang.Integer">
+    delete from sys_user_role
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+
+  <!--插入角色菜单关联表-->
+  <insert id="insertRoleMenu" parameterType="com.lltech.system.modules.system.model.SysRoleDO">
+    insert into sys_menu_role(role_id, menu_id) values (#{roleId}, #{menuId})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.lltech.system.modules.system.model.SysRoleDO">
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.lltech.system.modules.system.model.SysRoleDO">
+    update sys_role
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </update>
+</mapper>

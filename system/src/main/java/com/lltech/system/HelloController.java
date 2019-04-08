@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @author CREATED BY L.C.Y on 2019-3-29
  */
 @RestController
-@RequestMapping("/system")
+@RequestMapping
 public class HelloController {
 
-    @GetMapping("/hello")
+    @GetMapping("/")
     @Log(value = "获取Hello")
-    @RequiresPermissions(value = {"hello_select", "hello_all"}, logical = Logical.OR)
     public ResultBean getHello() {
-        return new ResultBean().ok("hello");
+        return new ResultBean().ok("hello, v1.0");
     }
 }

@@ -2,6 +2,8 @@ package com.lltech.system.config.shiro;
 
 import com.lltech.common.utils.JwtUtils;
 import com.lltech.common.utils.StringUtils;
+import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -19,11 +21,10 @@ import javax.servlet.http.HttpServletRequest;
  * 自定义Shiro过滤器，所有请求的请求头需携带token
  * @author Created by L.C.Y on 2018-8-28
  */
+@Slf4j
 @Component
 public class ShiroFilter extends AccessControlFilter {
-
-
-    private Logger log = LoggerFactory.getLogger(ShiroFilter.class);
+    private static final  String USER_UNFROZEN = "1";
 
     /**
      * 关闭注册，使Shiro默认的anon生效
@@ -72,6 +73,15 @@ public class ShiroFilter extends AccessControlFilter {
 
         // token验证失败后，提醒重新登录
         if (!JwtUtils.validateToken(token)) {
+            servletResponse.setContentType("application/json;charset=UTF-8");
+            servletResponse.getWriter().print("{\"code\":300,\"message\":\"token已失效，请重新登录！\"}");
+            return false;
+        }
+
+        // 用户是否被冻结
+        Claims claims = JwtUtils.parse(token);
+        if (claims.get("status") == null || !USER_UNFROZEN.equals(claims.get("status").toString())) {
+            log.info("claims: " + claims);
             servletResponse.setContentType("application/json;charset=UTF-8");
             servletResponse.getWriter().print("{\"code\":300,\"message\":\"token已失效，请重新登录！\"}");
             return false;

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lltech.system.modules.system.dao.SysMenuDOMapper">
+  <resultMap id="BaseResultMap" type="com.lltech.system.modules.system.model.SysMenuDO">
+    <id column="menu_id" jdbcType="INTEGER" property="menuId" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="parent_menu" jdbcType="VARCHAR" property="parentMenu" />
+    <result column="perms" jdbcType="VARCHAR" property="perms" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    menu_id, menu_name, parent_menu, perms, gmt_create
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_menu
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </select>
+
+  <!--根据菜单名查询-->
+  <select id="getMenuByMenuName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_menu
+    where menu_name LIKE CONCAT('%', #{menuName}, '%')
+  </select>
+
+  <!--菜单权限列表，不分页, 可根据菜单名查询-->
+  <select id="listMenu" parameterType="com.lltech.system.modules.system.model.SysMenuDO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_menu
+    where 1=1
+    <if test="menuName != null">
+      and menu_name LIKE CONCAT('%', #{menuName}, '%')
+    </if>
+  </select>
+
+  <!--根据角色Id查询该角色的菜单列表-->
+  <select id="listMenuByRoleId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select menu.menu_id, menu.menu_name, menu.parent_menu, menu.perms
+    from sys_menu menu
+    join sys_menu_role rm on menu.menu_id = rm.menu_id
+    where rm.role_id = #{roleId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_menu
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </delete>
+
+  <!--删除关联的角色-->
+  <delete id="deleteMenuRoleByMenuId" parameterType="java.lang.Integer">
+    delete from sys_menu_role
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.lltech.system.modules.system.model.SysMenuDO">
+    insert into sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="menuName != null">
+        menu_name,
+      </if>
+      <if test="parentMenu != null">
+        parent_menu,
+      </if>
+      <if test="perms != null">
+        perms,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentMenu != null">
+        #{parentMenu,jdbcType=VARCHAR},
+      </if>
+      <if test="perms != null">
+        #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.lltech.system.modules.system.model.SysMenuDO">
+    update sys_menu
+    <set>
+      <if test="menuName != null">
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentMenu != null">
+        parent_menu = #{parentMenu,jdbcType=VARCHAR},
+      </if>
+      <if test="perms != null">
+        perms = #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </update>
+
+</mapper>
