@@ -2,11 +2,11 @@
 Springboot + Shiro + MySQL + Mybatis框架
 
 ## 框架结构
-- common -工具模块
-  -enums - 枚举类
-  -exception - 自定义异常类
-  -utils - 工具类
-  -validation - validate分组类
+- common - 工具模块
+  - enums - 枚举类
+  - exception - 自定义异常类
+  - utils - 工具类
+  - validation - validate分组类
 
 - system - 功能模块
   - config - 配置
