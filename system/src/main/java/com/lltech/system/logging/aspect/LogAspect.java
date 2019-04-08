@@ -1,14 +1,17 @@
 package com.lltech.system.logging.aspect;
 
+import com.lltech.common.exception.BadRequestException;
 import com.lltech.common.utils.HttpContextUtils;
 import com.lltech.common.utils.JwtUtils;
 import com.lltech.common.utils.StringUtils;
+import com.lltech.common.utils.ThrowableUtil;
 import com.lltech.system.logging.model.LogDO;
 import com.lltech.system.logging.repository.LogRepository;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -32,6 +35,7 @@ import java.time.LocalDateTime;
 @Aspect
 @Component
 public class LogAspect {
+	private long beginTime = System.currentTimeMillis();
 	private final LogRepository logRepository;
 
 	@Autowired
@@ -44,17 +48,49 @@ public class LogAspect {
 
 	}
 
+	/**
+	 * 保存INFO日志
+	 * @param point 切点
+	 * @return Object
+	 * @throws Throwable 异常
+	 */
 	@Around("logPointCut()")
 	public Object around(ProceedingJoinPoint point) throws Throwable {
-		long beginTime = System.currentTimeMillis();
+		beginTime = System.currentTimeMillis();
 		//执行方法
-		Object result = point.proceed();
+		Object result;
+		try {
+			result = point.proceed();
+		}
+		// 捕获异常，并抛出自定义异常
+		catch (Exception e) {
+			throw new BadRequestException(e.getMessage());
+		}
+
 		//执行时长(毫秒)
 		long time = System.currentTimeMillis() - beginTime;
-		// 保存日志
-		saveSysLog(point, time);
+
+		// 记录INFO日志
+		LogDO logEntity = saveSysLog(point, time);
+		logEntity.setLogType("INFO");
+		// 保存系统日志
+		logRepository.save(logEntity);
 
 		return result;
+	}
+
+	/**
+	 *  记录ERROR日志
+	 * @param joinPoint 切点
+	 * @param e 异常
+	 */
+	@AfterThrowing(pointcut = "logPointCut()", throwing = "e")
+	public void logAfterTrowing(JoinPoint joinPoint, Throwable e) {
+		LogDO logEntity = saveSysLog((ProceedingJoinPoint) joinPoint, System.currentTimeMillis() - beginTime);
+		logEntity.setLogType("ERROR");
+		logEntity.setExceptionDetail(ThrowableUtil.getStackTrace(e));
+		// 保存系统日志
+		logRepository.save(logEntity);
 	}
 
 	/**
@@ -62,7 +98,7 @@ public class LogAspect {
 	 * @param joinPoint 切面
 	 * @param time 耗时
 	 */
-	private void saveSysLog(ProceedingJoinPoint joinPoint, long time) {
+	private LogDO saveSysLog(ProceedingJoinPoint joinPoint, long time) {
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
 
@@ -102,18 +138,19 @@ public class LogAspect {
 
 		// 用户名
 		String token =  getRequestToken(request);
-		Claims claims;
+		Claims claims = null;
 		String username = (token == null || token.isEmpty())
 				? "" : (claims = JwtUtils.parse(token)) == null
 				? "" : claims.get("username") == null
 				? "" : claims.get("username").toString();
+		log.info("claims:" + claims);
 		logEntity.setUsername(username);
 
 		logEntity.setTime(time);
-		logEntity.setLogType("INFO");
 		logEntity.setGmtCreate(LocalDateTime.now());
-		// 保存系统日志
-		logRepository.save(logEntity);
+
+		// 返回日志信息
+		return logEntity;
 	}
 
 	/**
