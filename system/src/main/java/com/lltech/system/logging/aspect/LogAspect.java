@@ -58,14 +58,7 @@ public class LogAspect {
 	public Object around(ProceedingJoinPoint point) throws Throwable {
 		beginTime = System.currentTimeMillis();
 		//执行方法
-		Object result;
-		try {
-			result = point.proceed();
-		}
-		// 捕获异常，并抛出自定义异常
-		catch (Exception e) {
-			throw new BadRequestException(e.getMessage());
-		}
+		Object result = point.proceed();
 
 		//执行时长(毫秒)
 		long time = System.currentTimeMillis() - beginTime;
@@ -84,14 +77,14 @@ public class LogAspect {
 	 * @param joinPoint 切点
 	 * @param e 异常
 	 */
-	@AfterThrowing(pointcut = "logPointCut()", throwing = "e")
-	public void logAfterTrowing(JoinPoint joinPoint, Throwable e) {
-		LogDO logEntity = saveSysLog((ProceedingJoinPoint) joinPoint, System.currentTimeMillis() - beginTime);
-		logEntity.setLogType("ERROR");
-		logEntity.setExceptionDetail(ThrowableUtil.getStackTrace(e));
-		// 保存系统日志
-		logRepository.save(logEntity);
-	}
+//	@AfterThrowing(pointcut = "logPointCut()", throwing = "e")
+//	public void logAfterTrowing(JoinPoint joinPoint, Throwable e) {
+//		LogDO logEntity = saveSysLog((ProceedingJoinPoint) joinPoint, System.currentTimeMillis() - beginTime);
+//		logEntity.setLogType("ERROR");
+//		logEntity.setExceptionDetail(ThrowableUtil.getStackTrace(e));
+//		// 保存系统日志
+//		logRepository.save(logEntity);
+//	}
 
 	/**
 	 * 保存切面日志到数据库
