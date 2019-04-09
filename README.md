@@ -17,4 +17,4 @@ Springboot + Shiro + MySQL + Mybatis框架
   - modules - 功能模块开发
   - app - app模块
   - system - 用户角色权限模块
-  - xxx - 可添加其他模块
+  - quartz - 定时任务模块/JPA
