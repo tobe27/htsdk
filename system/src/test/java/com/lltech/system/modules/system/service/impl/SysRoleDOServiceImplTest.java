@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -42,7 +44,7 @@ public class SysRoleDOServiceImplTest {
         role.setRoleId(2)
                 .setRoleName("普通员工")
                 .setRemark("角色管理");
-        Set<SysMenuDO> menus = new HashSet<>();
+        List<SysMenuDO> menus = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
             SysMenuDO menu = new SysMenuDO();
             menu.setMenuId(i);

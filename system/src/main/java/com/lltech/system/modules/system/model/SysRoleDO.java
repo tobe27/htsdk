@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -37,7 +38,7 @@ public class SysRoleDO {
     /**
      * 关联的权限，多对多
      */
-    private Set<SysMenuDO> menus;
+    private List<SysMenuDO> menus;
 
     /**
      * 关联的权限ID

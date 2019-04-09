@@ -52,7 +52,7 @@ public class SysMenuDOServiceImpl implements SysMenuDOService {
      * @return 列表
      */
     @Override
-    public Set<SysMenuDO> listMenu(SysMenuDO record) {
+    public List<SysMenuDO> listMenu(SysMenuDO record) {
         return sysMenuDOMapper.listMenu(record);
     }
 
@@ -93,7 +93,7 @@ public class SysMenuDOServiceImpl implements SysMenuDOService {
      * @param menus
      * @return
      */
-    public List<MenuTreeEntity> convertMenuToTree(Set<SysMenuDO> menus) {
+    public List<MenuTreeEntity> convertMenuToTree(List<SysMenuDO> menus) {
         // 树形结构列表
         List<MenuTreeEntity> returnTree = new ArrayList<>();
         String[] systemManageArr = {"用户管理", "角色管理", "菜单管理", "操作日志"};

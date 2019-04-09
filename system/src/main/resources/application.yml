@@ -42,7 +42,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   # xml扫描位置mybatis:
-  mapper-locations: classpath*:mapper/*.xml
+  mapper-locations: classpath*:mapper/*/*.xml
 
 #=================Logback日志配置=========================
 logging:

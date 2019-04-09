@@ -9,6 +9,7 @@ import com.lltech.system.quartz.service.QuartzJobService;
 import com.lltech.system.quartz.service.query.QuartzJobQueryService;
 import com.lltech.system.quartz.service.query.QuartzLogQueryService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +41,7 @@ public class QuartzJobController {
 
     @Log("定时任务列表")
     @GetMapping(value = "/job/list")
+    @RequiresPermissions("sys_job_list")
     public ResultBean getJobs(QuartzJob resources, Integer pageNum, Integer pageSize){
         Page page = quartzJobQueryService.queryAll(resources,PageRequest.of(pageNum -1, pageSize, Sort.Direction.DESC, "id"));
         return new ResultBean().ok(page.getTotalElements(), page.getContent());
@@ -54,6 +56,7 @@ public class QuartzJobController {
      */
     @Log("定时任务日志列表")
     @GetMapping(value = "/job/log/list")
+    @RequiresPermissions("sys_job_log_list")
     public ResultBean getJobLogs(QuartzLog resources, Integer pageNum, Integer pageSize){
         Page page = quartzLogQueryService.queryAll(resources, PageRequest.of(pageNum -1, pageSize, Sort.Direction.DESC, "id"));
         return new ResultBean().ok(page.getTotalElements(), page.getContent());
@@ -61,6 +64,7 @@ public class QuartzJobController {
 
     @Log("新增定时任务")
     @PostMapping(value = "/job")
+    @RequiresPermissions("sys_job_create")
     public ResultBean create(@Validated @RequestBody QuartzJob resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -71,6 +75,7 @@ public class QuartzJobController {
 
     @Log("修改定时任务")
     @PutMapping(value = "/job")
+    @RequiresPermissions("sys_job_modify")
     public ResultBean update(@Validated(QuartzJob.Update.class) @RequestBody QuartzJob resources){
         quartzJobService.update(resources);
         return new ResultBean().ok();
@@ -78,6 +83,7 @@ public class QuartzJobController {
 
     @Log("更改定时任务状态")
     @PutMapping(value = "/job/{id}")
+    @RequiresPermissions("sys_job_modify_status")
     public ResultBean updateIsPause(@PathVariable Long id){
         quartzJobService.updateIsPause(quartzJobService.findById(id));
         return new ResultBean().ok();
@@ -90,6 +96,7 @@ public class QuartzJobController {
      */
     @Log("执行一次定时任务")
     @PutMapping(value = "/job/{id}/exec")
+    @RequiresPermissions("sys_job_exec")
     public ResultBean execution(@PathVariable Long id){
         quartzJobService.execution(quartzJobService.findById(id));
         return new ResultBean().ok();
@@ -97,6 +104,7 @@ public class QuartzJobController {
 
     @Log("删除定时任务")
     @DeleteMapping(value = "/job/{id}")
+    @RequiresPermissions("sys_job_delete")
     public ResultBean delete(@PathVariable Long id){
         quartzJobService.delete(quartzJobService.findById(id));
         return new ResultBean().ok();

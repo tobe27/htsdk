@@ -2,7 +2,6 @@ package com.lltech.system.config.shiro;
 
 import com.lltech.common.utils.JwtUtils;
 import com.lltech.system.modules.system.model.SysMenuDO;
-import com.lltech.system.modules.system.model.SysUserDO;
 import com.lltech.system.modules.system.service.SysMenuDOService;
 import com.lltech.system.modules.system.service.SysUserDOService;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +59,7 @@ public class ShiroRealm extends AuthorizingRealm {
         // 如果角色是超级管理员，分配所有权限
         if (roleIds != null && roleIds.size() != 0 && roleIds.contains(SUPER_ADMIN)) {
             log.info("超级管理员授权所有权限");
-            Set<SysMenuDO> menus = sysMenuDOService.listMenu(new SysMenuDO());
+            List<SysMenuDO> menus = sysMenuDOService.listMenu(new SysMenuDO());
             for (SysMenuDO menu : menus) {
                 perms.add(menu.getPerms());
             }

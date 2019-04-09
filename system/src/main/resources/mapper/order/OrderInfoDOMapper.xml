@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lltech.system.modules.order.dao.OrderInfoDOMapper">
+  <resultMap id="BaseResultMap" type="com.lltech.system.modules.order.model.OrderInfoDO">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="order_amount" jdbcType="INTEGER" property="orderAmount" />
+    <result column="pay_method" jdbcType="TINYINT" property="payMethod" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="response_code" jdbcType="VARCHAR" property="responseCode" />
+    <result column="response_msg" jdbcType="VARCHAR" property="responseMsg" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="response_time" jdbcType="TIMESTAMP" property="responseTime" />
+    <result column="order_time" jdbcType="TIMESTAMP" property="orderTime" />
+    <result column="pay_content" jdbcType="VARCHAR" property="payContent" />
+    <result column="player_id" jdbcType="BIGINT" property="playerId" />
+    <result column="pay_flow_code" jdbcType="VARCHAR" property="payFlowCode" />
+    <result column="check_exception_request" jdbcType="VARCHAR" property="checkExceptionRequest" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    order_id, order_no, order_amount, pay_method, status, response_code, response_msg,
+    send_time, response_time, order_time, pay_content, player_id, pay_flow_code, check_exception_request,
+    gmt_create, gmt_modified
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_info
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+
+  <!--查询玩家订单列表-->
+  <select id="listOrderByPlayerId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select info.order_id, info.order_no, info.pay_method, info.order_amount, info.status, info.order_time, info.gmt_create
+    from order_info info
+    where info.player_id = #{playerId,jdbcType=BIGINT}
+    ORDER BY info.order_id DESC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from order_info
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.lltech.system.modules.order.model.OrderInfoDO">
+    insert into order_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="orderAmount != null">
+        order_amount,
+      </if>
+      <if test="payMethod != null">
+        pay_method,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="responseCode != null">
+        response_code,
+      </if>
+      <if test="responseMsg != null">
+        response_msg,
+      </if>
+      <if test="sendTime != null">
+        send_time,
+      </if>
+      <if test="responseTime != null">
+        response_time,
+      </if>
+      <if test="orderTime != null">
+        order_time,
+      </if>
+      <if test="payContent != null">
+        pay_content,
+      </if>
+      <if test="playerId != null">
+        player_id,
+      </if>
+      <if test="payFlowCode != null">
+        pay_flow_code,
+      </if>
+      <if test="checkExceptionRequest != null">
+        check_exception_request,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAmount != null">
+        #{orderAmount,jdbcType=INTEGER},
+      </if>
+      <if test="payMethod != null">
+        #{payMethod,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="responseCode != null">
+        #{responseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="responseMsg != null">
+        #{responseMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="responseTime != null">
+        #{responseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderTime != null">
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payContent != null">
+        #{payContent,jdbcType=VARCHAR},
+      </if>
+      <if test="playerId != null">
+        #{playerId,jdbcType=BIGINT},
+      </if>
+      <if test="payFlowCode != null">
+        #{payFlowCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkExceptionRequest != null">
+        #{checkExceptionRequest,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.lltech.system.modules.order.model.OrderInfoDO">
+    update order_info
+    <set>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAmount != null">
+        order_amount = #{orderAmount,jdbcType=INTEGER},
+      </if>
+      <if test="payMethod != null">
+        pay_method = #{payMethod,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="responseCode != null">
+        response_code = #{responseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="responseMsg != null">
+        response_msg = #{responseMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null">
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="responseTime != null">
+        response_time = #{responseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderTime != null">
+        order_time = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payContent != null">
+        pay_content = #{payContent,jdbcType=VARCHAR},
+      </if>
+      <if test="playerId != null">
+        player_id = #{playerId,jdbcType=BIGINT},
+      </if>
+      <if test="payFlowCode != null">
+        pay_flow_code = #{payFlowCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkExceptionRequest != null">
+        check_exception_request = #{checkExceptionRequest,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+
+</mapper>

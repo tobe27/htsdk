@@ -64,7 +64,7 @@ public interface SysUserDOService {
      * @param userId userId
      * @return 菜单列表
      */
-    Set<SysMenuDO> listMenuByUserId(Long userId);
+    List<SysMenuDO> listMenuByUserId(Long userId);
 
     /**
      * 列表,可根据用户名和状态查询

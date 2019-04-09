@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lltech.system.modules.player.dao.PlayerDOMapper">
+  <resultMap id="BaseResultMap" type="com.lltech.system.modules.player.model.PlayerDO">
+    <id column="player_id" jdbcType="BIGINT" property="playerId" />
+    <result column="player_account" jdbcType="VARCHAR" property="playerAccount" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="play_type" jdbcType="VARCHAR" property="playType" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="birthday" jdbcType="VARCHAR" property="birthday" />
+    <result column="imei_code" jdbcType="VARCHAR" property="imeiCode" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="game_id" jdbcType="BIGINT" property="gameId" />
+    <result column="channel_id" jdbcType="VARCHAR" property="channelId" />
+    <result column="extension_mainchain" jdbcType="VARCHAR" property="extensionMainchain" />
+    <result column="extension_subchain" jdbcType="VARCHAR" property="extensionSubchain" />
+    <result column="bundle_id" jdbcType="VARCHAR" property="bundleId" />
+    <result column="idfa" jdbcType="VARCHAR" property="idfa" />
+    <result column="register_ip" jdbcType="VARCHAR" property="registerIp" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="career" jdbcType="VARCHAR" property="career" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
+    <result column="register_time" jdbcType="TIMESTAMP" property="registerTime" />
+    <result column="first_login_time" jdbcType="TIMESTAMP" property="firstLoginTime" />
+    <result column="download_time" jdbcType="TIMESTAMP" property="downloadTime" />
+    <result column="recent_recharge_amount" jdbcType="INTEGER" property="recentRechargeAmount" />
+    <result column="recent_recharge_time" jdbcType="TIMESTAMP" property="recentRechargeTime" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+
+    <!--关联gameName-->
+    <result column="game_name" jdbcType="VARCHAR" property="gameName" />
+    <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    player_id, player_account, password, play_type, status, mobile, sex, age, birthday,
+    imei_code, email, game_id, channel_id, extension_mainchain, extension_subchain, bundle_id,
+    idfa, register_ip, picture, country, province, city, career, company, last_login_time,
+    last_login_ip, register_time, first_login_time, download_time, recent_recharge_amount,
+    recent_recharge_time, gmt_create, gmt_modified
+  </sql>
+
+  <!--玩家详情-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select p.player_id, p.player_account, p.mobile, p.imei_code, g.game_name, ch.channel_name, p.register_time, p.status
+    from player p
+    join game g on p.game_id = g.game_id
+    left join channel ch on p.channel_id = ch.channel_id
+    where p.player_id = #{playerId,jdbcType=BIGINT}
+  </select>
+
+  <!--玩家列表，可根据账号、手机号、IMEI码、游戏id、渠道id、账号状态、注册时间区间查询-->
+  <select id="listPlayerSelective" parameterType="com.lltech.system.modules.player.model.PlayerDO" resultMap="BaseResultMap">
+    select p.player_id, p.player_account, p.mobile, p.imei_code, g.game_name, ch.channel_name, p.register_time, p.status
+    from player p
+    join game g on p.game_id = g.game_id
+    left join channel ch on p.channel_id = ch.channel_id
+    where 1=1
+    <if test="playerAccount != null">
+      and p.player_account LIKE CONCAT('%', #{playerAccount}, '%')
+    </if>
+    <if test="mobile != null">
+      and p.mobile LIKE CONCAT('%', #{mobile}, '%')
+    </if>
+    <if test="imeiCode != null">
+      and p.imei_code LIKE CONCAT('%', #{imeiCode}, '%')
+    </if>
+    <if test="gameId != null">
+      and p.game_id = #{gameId}
+    </if>
+    <if test="channelId != null">
+      and p.channel_id = #{channelId}
+    </if>
+    <if test="status != null">
+      and p.status = #{status}
+    </if>
+    <if test="startDate != null and endDate != null">
+      and p.register_time between #{startDate} and #{endDate}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from player
+    where player_id = #{playerId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.lltech.system.modules.player.model.PlayerDO">
+    insert into player
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="playerId != null">
+        player_id,
+      </if>
+      <if test="playerAccount != null">
+        player_account,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="playType != null">
+        play_type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="imeiCode != null">
+        imei_code,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="gameId != null">
+        game_id,
+      </if>
+      <if test="channelId != null">
+        channel_id,
+      </if>
+      <if test="extensionMainchain != null">
+        extension_mainchain,
+      </if>
+      <if test="extensionSubchain != null">
+        extension_subchain,
+      </if>
+      <if test="bundleId != null">
+        bundle_id,
+      </if>
+      <if test="idfa != null">
+        idfa,
+      </if>
+      <if test="registerIp != null">
+        register_ip,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="career != null">
+        career,
+      </if>
+      <if test="company != null">
+        company,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+      <if test="lastLoginIp != null">
+        last_login_ip,
+      </if>
+      <if test="registerTime != null">
+        register_time,
+      </if>
+      <if test="firstLoginTime != null">
+        first_login_time,
+      </if>
+      <if test="downloadTime != null">
+        download_time,
+      </if>
+      <if test="recentRechargeAmount != null">
+        recent_recharge_amount,
+      </if>
+      <if test="recentRechargeTime != null">
+        recent_recharge_time,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="playerId != null">
+        #{playerId,jdbcType=BIGINT},
+      </if>
+      <if test="playerAccount != null">
+        #{playerAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="playType != null">
+        #{playType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="imeiCode != null">
+        #{imeiCode,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="gameId != null">
+        #{gameId,jdbcType=BIGINT},
+      </if>
+      <if test="channelId != null">
+        #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionMainchain != null">
+        #{extensionMainchain,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionSubchain != null">
+        #{extensionSubchain,jdbcType=VARCHAR},
+      </if>
+      <if test="bundleId != null">
+        #{bundleId,jdbcType=VARCHAR},
+      </if>
+      <if test="idfa != null">
+        #{idfa,jdbcType=VARCHAR},
+      </if>
+      <if test="registerIp != null">
+        #{registerIp,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="career != null">
+        #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null">
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginIp != null">
+        #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null">
+        #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstLoginTime != null">
+        #{firstLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadTime != null">
+        #{downloadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recentRechargeAmount != null">
+        #{recentRechargeAmount,jdbcType=INTEGER},
+      </if>
+      <if test="recentRechargeTime != null">
+        #{recentRechargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.lltech.system.modules.player.model.PlayerDO">
+    update player
+    <set>
+      <if test="playerAccount != null">
+        player_account = #{playerAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="playType != null">
+        play_type = #{playType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="imeiCode != null">
+        imei_code = #{imeiCode,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="gameId != null">
+        game_id = #{gameId,jdbcType=BIGINT},
+      </if>
+      <if test="channelId != null">
+        channel_id = #{channelId,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionMainchain != null">
+        extension_mainchain = #{extensionMainchain,jdbcType=VARCHAR},
+      </if>
+      <if test="extensionSubchain != null">
+        extension_subchain = #{extensionSubchain,jdbcType=VARCHAR},
+      </if>
+      <if test="bundleId != null">
+        bundle_id = #{bundleId,jdbcType=VARCHAR},
+      </if>
+      <if test="idfa != null">
+        idfa = #{idfa,jdbcType=VARCHAR},
+      </if>
+      <if test="registerIp != null">
+        register_ip = #{registerIp,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="career != null">
+        career = #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null">
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginIp != null">
+        last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null">
+        register_time = #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstLoginTime != null">
+        first_login_time = #{firstLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadTime != null">
+        download_time = #{downloadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recentRechargeAmount != null">
+        recent_recharge_amount = #{recentRechargeAmount,jdbcType=INTEGER},
+      </if>
+      <if test="recentRechargeTime != null">
+        recent_recharge_time = #{recentRechargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where player_id = #{playerId,jdbcType=BIGINT}
+  </update>
+</mapper>

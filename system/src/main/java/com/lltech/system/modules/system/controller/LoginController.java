@@ -88,7 +88,7 @@ public class LoginController {
 
         // 超级管理员有所有权限及菜单
         if (roleIdList.contains(SUPER_ADMIN)) {
-            Set<SysMenuDO> menus = sysMenuDOService.listMenu(new SysMenuDO());
+            List<SysMenuDO> menus = sysMenuDOService.listMenu(new SysMenuDO());
             // 树形菜单
             // 获取用户菜单与权限
             menuTree = sysMenuDOService.convertMenuToTree(menus);
@@ -103,7 +103,7 @@ public class LoginController {
         else {
             // 树形菜单
             // 获取用户菜单与权限
-            Set<SysMenuDO> menus = sysUserDOService.listMenuByUserId(user.getUserId());
+            List<SysMenuDO> menus = sysUserDOService.listMenuByUserId(user.getUserId());
             menuTree = sysMenuDOService.convertMenuToTree(menus);
 
             // 权限

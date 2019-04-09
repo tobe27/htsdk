@@ -23,21 +23,20 @@
 
   <!--根据菜单名查询-->
   <select id="getMenuByMenuName" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
+    select menu_id, menu_name, parent_menu, perms, gmt_create
     from sys_menu
     where menu_name LIKE CONCAT('%', #{menuName}, '%')
   </select>
 
   <!--菜单权限列表，不分页, 可根据菜单名查询-->
   <select id="listMenu" parameterType="com.lltech.system.modules.system.model.SysMenuDO" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
+    select menu_id, menu_name, parent_menu, perms, gmt_create
     from sys_menu
     where 1=1
     <if test="menuName != null">
       and menu_name LIKE CONCAT('%', #{menuName}, '%')
     </if>
+    ORDER BY perms DESC
   </select>
 
   <!--根据角色Id查询该角色的菜单列表-->

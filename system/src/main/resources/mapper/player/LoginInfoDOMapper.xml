@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lltech.system.modules.player.dao.LoginInfoDOMapper">
+  <resultMap id="BaseResultMap" type="com.lltech.system.modules.player.model.LoginInfoDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="player_id" jdbcType="BIGINT" property="playerId" />
+    <result column="game_id" jdbcType="BIGINT" property="gameId" />
+    <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+    <result column="imei_code" jdbcType="VARCHAR" property="imeiCode" />
+    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+    <result column="device_type" jdbcType="TINYINT" property="deviceType" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+
+    <!--关联参数-->
+    <result column="game_name" jdbcType="VARCHAR" property="gameName" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, player_id, game_id, login_ip, imei_code, login_time, device_type, token
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from login_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <!--根据玩家id查询登录记录列表-->
+  <select id="listByPlayerId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select info.id,info.player_id, info.login_time, game.game_name, info.login_ip
+    from login_info info
+    join game game on info.game_id = game.game_id
+    where info.player_id = #{playerId,jdbcType=BIGINT}
+    ORDER BY info.id DESC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from login_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.lltech.system.modules.player.model.LoginInfoDO">
+    insert into login_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="playerId != null">
+        player_id,
+      </if>
+      <if test="gameId != null">
+        game_id,
+      </if>
+      <if test="loginIp != null">
+        login_ip,
+      </if>
+      <if test="imeiCode != null">
+        imei_code,
+      </if>
+      <if test="loginTime != null">
+        login_time,
+      </if>
+      <if test="deviceType != null">
+        device_type,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="playerId != null">
+        #{playerId,jdbcType=BIGINT},
+      </if>
+      <if test="gameId != null">
+        #{gameId,jdbcType=BIGINT},
+      </if>
+      <if test="loginIp != null">
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="imeiCode != null">
+        #{imeiCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceType != null">
+        #{deviceType,jdbcType=TINYINT},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.lltech.system.modules.player.model.LoginInfoDO">
+    update login_info
+    <set>
+      <if test="playerId != null">
+        player_id = #{playerId,jdbcType=BIGINT},
+      </if>
+      <if test="gameId != null">
+        game_id = #{gameId,jdbcType=BIGINT},
+      </if>
+      <if test="loginIp != null">
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="imeiCode != null">
+        imei_code = #{imeiCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        login_time = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceType != null">
+        device_type = #{deviceType,jdbcType=TINYINT},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

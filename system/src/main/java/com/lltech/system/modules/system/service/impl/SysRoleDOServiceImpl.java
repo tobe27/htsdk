@@ -84,7 +84,7 @@ public class SysRoleDOServiceImpl implements SysRoleDOService {
         sysRoleDOMapper.deleteRoleMenuByRoleId(record.getRoleId());
 
         // 新增关联菜单
-        Set<SysMenuDO> menus = record.getMenus();
+        List<SysMenuDO> menus = record.getMenus();
         if (menus == null || menus.size() == 0) {
             return 0;
         }
@@ -107,7 +107,7 @@ public class SysRoleDOServiceImpl implements SysRoleDOService {
         // 查询角色详情
         SysRoleDO role = sysRoleDOMapper.selectByPrimaryKey(roleId);
         // 如果是超级管理员，返回所有菜单
-        Set<SysMenuDO> menus;
+        List<SysMenuDO> menus;
         if (roleId == SUPER_ADMIN) {
             menus = sysMenuDOMapper.listMenu(new SysMenuDO());
         }

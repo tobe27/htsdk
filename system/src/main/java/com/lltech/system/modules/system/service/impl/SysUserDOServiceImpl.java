@@ -153,7 +153,7 @@ public class SysUserDOServiceImpl implements SysUserDOService {
      * @return 菜单列表
      */
     @Override
-    public Set<SysMenuDO> listMenuByUserId(Long userId) {
+    public List<SysMenuDO> listMenuByUserId(Long userId) {
         return sysMenuDOMapper.listMenuByUserId(userId);
     }
 
