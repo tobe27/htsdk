@@ -12,13 +12,11 @@ import com.lltech.system.modules.system.model.SysUserDO;
 import com.lltech.system.modules.system.service.SysMenuDOService;
 import com.lltech.system.modules.system.service.SysUserDOService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
@@ -58,6 +56,7 @@ public class LoginController {
         if (user == null) {
             return new ResultBean().error("用户名或密码不正确！");
         }
+
         // 判断用户名大小写是否相同
         if (!userDTO.getUsername().equals(user.getUsername())) {
             return new ResultBean().error("用户名或密码不正确！");
@@ -79,7 +78,7 @@ public class LoginController {
         payload.put("userId", user.getUserId());
         payload.put("status", user.getStatus());
         String token = JwtUtils.generateTokenOffExp(payload);
-        log.info("{username=" + user.getUsername() + ", token=" + token + "}");
+        log.info("{username=" + user.getUsername() + ", token=" + token + ", status=" + user.getStatus() + "}");
 
         // 用户的角色
         Set<Integer> roleIdList = sysUserDOService.listRoleIdByUserId(user.getUserId());
@@ -87,7 +86,7 @@ public class LoginController {
         List<MenuTreeEntity> menuTree;
         Set<String> perms = new HashSet<>();;
 
-        // 超级管理员有所有权限
+        // 超级管理员有所有权限及菜单
         if (roleIdList.contains(SUPER_ADMIN)) {
             Set<SysMenuDO> menus = sysMenuDOService.listMenu(new SysMenuDO());
             // 树形菜单
@@ -100,7 +99,7 @@ public class LoginController {
             }
 
         }
-        // 非超级管理员只有相应的权限
+        // 非超级管理员只有相应的权限及菜单
         else {
             // 树形菜单
             // 获取用户菜单与权限

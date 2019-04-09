@@ -71,6 +71,12 @@
         <!--Spring boot end-->
 
         <!--==============必备工具的依赖=======================-->
+        <!-- quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.3.1</version>
+        </dependency>
         <!--Shiro-->
         <dependency>
             <groupId>org.apache.shiro</groupId>

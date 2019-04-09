@@ -2,6 +2,8 @@ package com.lltech.system.config.shiro;
 
 import com.lltech.common.utils.JwtUtils;
 import com.lltech.common.utils.StringUtils;
+import com.lltech.system.modules.system.model.SysUserDO;
+import com.lltech.system.modules.system.service.SysUserDOService;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
@@ -10,6 +12,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -24,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Component
 public class ShiroFilter extends AccessControlFilter {
-    private static final  String USER_UNFROZEN = "1";
 
     /**
      * 关闭注册，使Shiro默认的anon生效
@@ -73,15 +75,6 @@ public class ShiroFilter extends AccessControlFilter {
 
         // token验证失败后，提醒重新登录
         if (!JwtUtils.validateToken(token)) {
-            servletResponse.setContentType("application/json;charset=UTF-8");
-            servletResponse.getWriter().print("{\"code\":300,\"message\":\"token已失效，请重新登录！\"}");
-            return false;
-        }
-
-        // 用户是否被冻结
-        Claims claims = JwtUtils.parse(token);
-        if (claims.get("status") == null || !USER_UNFROZEN.equals(claims.get("status").toString())) {
-            log.info("claims: " + claims);
             servletResponse.setContentType("application/json;charset=UTF-8");
             servletResponse.getWriter().print("{\"code\":300,\"message\":\"token已失效，请重新登录！\"}");
             return false;
