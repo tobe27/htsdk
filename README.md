@@ -1,5 +1,5 @@
 # Hetun SDK
-Springboot + Shiro + MySQL + Mybatis框架
+SpringBoot + Shiro + MySQL + Mybatis框架
 
 ## 框架结构
 - common - 工具模块
